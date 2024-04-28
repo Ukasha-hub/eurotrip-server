@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express= require('express');
 const cors= require('cors');
 const app= express();
@@ -35,10 +35,33 @@ async function run() {
     await client.connect();
     const touristSpotCollection= client.db('touristSpotDB').collection('touristSpot');
 
+    app.get('/touristSpot', async(req,res)=>{
+      const cursor= touristSpotCollection.find()
+      const result= await cursor.toArray()
+      res.send(result)
+    })
+
+    app.get('/touristSpot:id', async(req, res)=>{
+      const id= req.params.id
+      const query= {_id: new ObjectId(id)}
+      const result =await touristSpotCollection.findOne(query)
+      res.send(result)
+
+    })
+    
     app.post('/touristSpot', async(req,res)=>{
       const newSpot= req.body;
       console.log(newSpot)
       const result =await touristSpotCollection.insertOne(newSpot)
+      res.send(result)
+    })
+
+    
+
+    app.delete('/touristSpot/:id', async(req,res)=>{
+      const id= req.params.id
+      const query= {_id: new ObjectId(id)}
+      const result= await touristSpotCollection.deleteOne(query)
       res.send(result)
     })
 
