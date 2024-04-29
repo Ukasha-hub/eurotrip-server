@@ -58,13 +58,13 @@ async function run() {
     })
 
     app.put('/touristSpot/:id', async(req, res)=>{
-      try{
+  
         const id= req.params.id
       
         console.log('Received ID:', id); 
       
       const filter= {_id: new ObjectId(id)}
-      console.log('Id after new objectID:', filter)
+      
       const options= {upsert:true}
       const updateSpot= req.body
       const Spot={
@@ -84,21 +84,14 @@ async function run() {
            
         }
       }
-      console.log(Spot)
+      
       const result= await touristSpotCollection.updateOne(filter, Spot, options)
-      console.log(result)
+      
       res.send(result)
-      if (result.modifiedCount > 0) {
-        res.status(200).json({ success: true, message: 'Tourist spot updated successfully.' });
-    } else {
-        res.status(404).json({ success: false, message: 'Tourist spot not found.' });
-    }
-      }
+     
+      
 
-    catch (error) {
-      console.error('Error updating tourist spot:', error);
-      res.status(500).json({ success: false, message: 'An error occurred while updating the tourist spot.' });
-  }
+   
 
     })
 
@@ -106,7 +99,7 @@ async function run() {
 
     app.delete('/touristSpot/:id', async(req,res)=>{
       const id= String(req.params.id)
-      //console.log('Received ID from delete:', id); 
+      
 
       const query= {_id: new ObjectId(id)}
       
